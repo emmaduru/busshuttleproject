@@ -7,7 +7,6 @@
 .env
 
 passenger-data.txt
-stops.txt
 
 # User-specific files
 *.rsuser
