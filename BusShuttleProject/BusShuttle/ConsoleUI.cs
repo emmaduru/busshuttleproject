@@ -37,9 +37,9 @@ public class ConsoleUI {
 
             do {
                 Stop selectedStop = AnsiConsole.Prompt(
-                new SelectionPrompt<Stop>()
-                    .Title("Select a stop")
-                    .AddChoices(selectedLoop.Stops));
+                    new SelectionPrompt<Stop>()
+                        .Title("Select a stop")
+                        .AddChoices(selectedLoop.Stops));
 
                 Console.WriteLine("You selected " + selectedStop.Name);
 
@@ -58,6 +58,38 @@ public class ConsoleUI {
                         }));
             } while (command != "end");
             
+        } else if (mode == "manager") {
+            string command;
+
+            do {
+                command = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("What do you want to do?")
+                        .AddChoices(new[] {
+                            "add stop", "delete a stop", "list stops", "end"
+                        }));
+
+                if (command == "add stop") {
+                    string newStopName = AnsiConsole.Prompt(
+                        new TextPrompt<string>("Enter the a new stop name: "));
+                    
+                    dataManager.AddStop(new Stop(newStopName));
+                } else if (command == "delete a stop") {
+                    Stop selectedStop = AnsiConsole.Prompt(
+                        new SelectionPrompt<Stop>()
+                            .Title("Select a stop")
+                            .AddChoices(dataManager.Stops));
+                    dataManager.RemoveStop(selectedStop);
+                } else if (command == "list stops") {
+                    var table = new Table();
+                    table.AddColumn("Stop Name");
+
+                    foreach(var stop in dataManager.Stops) {
+                        table.AddRow(stop.Name);
+                    }
+                    AnsiConsole.Write(table);
+                }
+            } while (command != "end");
         }
     }
     public static string AskForInput(string message) {
